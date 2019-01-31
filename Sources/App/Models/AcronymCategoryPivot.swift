@@ -26,28 +26,34 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Routing
+import FluentPostgreSQL
+import Foundation
 import Vapor
-import Fluent
 
-/// Register your application's routes here.
-///
-/// [Learn More →](https://docs.vapor.codes/3.0/getting-started/structure/#routesswift)
-public func routes(_ router: Router) throws {
-  // Basic "Hello, world!" example
-  router.get("hello") { req in
-    return "Hello, world!"
+final class AcronymCategoryPivot: PostgreSQLUUIDPivot, ModifiablePivot {
+
+  var id: UUID?
+  var acronymID: Acronym.ID
+  var categoryID: Category.ID
+
+  typealias Left = Acronym
+  typealias Right = Category
+  static let leftIDKey: LeftIDKey = \.acronymID
+  static let rightIDKey: RightIDKey = \.categoryID
+
+  init(_ acronym: Acronym, _ category: Category) throws {
+    self.acronymID = try acronym.requireID()
+    self.categoryID = try category.requireID()
   }
+  
+}
 
-  let acronymsController = AcronymsController()
-  try router.register(collection: acronymsController)
-
-  let usersController = UsersController()
-  try router.register(collection: usersController)
-
-  let categoriesController = CategoriesController()
-  try router.register(collection: categoriesController)
-
-    let websiteController = WebsiteController()
-    try router.register(collection: websiteController)
+extension AcronymCategoryPivot: Migration {
+  static func prepare(on connection: PostgreSQLConnection) -> Future<Void> {
+    return Database.create(self, on: connection) { builder in
+      try addProperties(to: builder)
+      builder.reference(from: \.acronymID, to: \Acronym.id, onDelete: .cascade)
+      builder.reference(from: \.categoryID, to: \Category.id, onDelete: .cascade)
+    }
+  }
 }

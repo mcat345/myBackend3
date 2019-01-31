@@ -26,28 +26,32 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Routing
 import Vapor
-import Fluent
 
-/// Register your application's routes here.
-///
-/// [Learn More →](https://docs.vapor.codes/3.0/getting-started/structure/#routesswift)
-public func routes(_ router: Router) throws {
-  // Basic "Hello, world!" example
-  router.get("hello") { req in
-    return "Hello, world!"
+struct CategoriesController: RouteCollection {
+  func boot(router: Router) throws {
+    let categoriesRoute = router.grouped("api", "categories")
+    categoriesRoute.post(Category.self, use: createHandler)
+    categoriesRoute.get(use: getAllHandler)
+    categoriesRoute.get(Category.parameter, use: getHandler)
+    categoriesRoute.get(Category.parameter, "acronyms", use: getAcronymsHandler)
   }
 
-  let acronymsController = AcronymsController()
-  try router.register(collection: acronymsController)
+  func createHandler(_ req: Request, category: Category) throws -> Future<Category> {
+    return category.save(on: req)
+  }
 
-  let usersController = UsersController()
-  try router.register(collection: usersController)
+  func getAllHandler(_ req: Request) throws -> Future<[Category]> {
+    return Category.query(on: req).all()
+  }
 
-  let categoriesController = CategoriesController()
-  try router.register(collection: categoriesController)
+  func getHandler(_ req: Request) throws -> Future<Category> {
+    return try req.parameters.next(Category.self)
+  }
 
-    let websiteController = WebsiteController()
-    try router.register(collection: websiteController)
+  func getAcronymsHandler(_ req: Request) throws -> Future<[Acronym]> {
+    return try req.parameters.next(Category.self).flatMap(to: [Acronym].self) { category in
+      try category.acronyms.query(on: req).all()
+    }
+  }
 }
