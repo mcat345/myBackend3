@@ -1,35 +1,5 @@
-#set("content") {
-<img src="/images/logo.png" class="mx-auto d-block" alt="TIL Logo" />
-<h1>Acronyms</h1>
-
-#if(acronyms) {
-<table class="table table-bordered table-hover">
-  <thead class="thead-light">
-    <tr>
-      <th>
-        Short
-      </th>
-      <th>
-        Long
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    #for(acronym in acronyms) {
-    <tr>
-      <td>
-        <a href="/acronyms/#(acronym.id)">
-          #(acronym.short)
-        </a>
-      </td>
-      <td>#(acronym.long)</td>
-    </tr>
-    }
-  </tbody>
-</table>
-} else {
-<h2>There aren't any acronyms yet!</h2>
-}
-}
-
-#embed("base")
+<p>#set("content") { <img class="mx-auto d-block" src="/images/logo.png" alt="logo" /></p>
+<h1>Hi, I'm Denis</h1>
+<h2>This swift 4 server</h2>
+<h2>I&rsquo;m a software engineer living in Kiev, Ukraine. You can follow me on <a class="twitter" href="https://www.facebook.com/majorcat">facebook</a> and check out my code on <a class="github" href="https://github.com/mcat345">GitHub</a>.<br /><br /><br /></h2>
+<p>&nbsp;} #embed("base")</p>
