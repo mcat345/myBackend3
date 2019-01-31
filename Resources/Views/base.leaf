@@ -9,7 +9,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-      <a class="navbar-brand" href="/">TIL</a>
+      <a class="navbar-brand" href="/">swift backend</a>
       <button class="navbar-toggler" type="button"
         data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -22,14 +22,14 @@
             <a href="/" class="nav-link">Home</a>
           </li>
           <li class="nav-item #if(title == "All Users"){active}">
-            <a href="/users" class="nav-link">All Users</a>
+            <a href="/users" class="nav-link">Projects</a>
           </li>
           <li class="nav-item #if(title == "All Categories"){active}">
-            <a href="/categories" class="nav-link">All Categories</a>
+            <a href="/categories" class="nav-link">Links</a>
           </li>
           <li class="nav-item #if(title == "Create An Acronym"){active}">
             <a href="/acronyms/create" class="nav-link">
-              Create An Acronym
+              Contacts
             </a>
           </li>
         </ul>
